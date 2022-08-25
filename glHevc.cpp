@@ -13,12 +13,16 @@ extern "C" {
 #include <GLFW/glfw3.h>
 }
 
+#include <cstdio>
+#include <cstdlib>
+#include <ctime>
+#include <linux/videodev2.h>
+#include <cerrno>
+#include <fcntl.h>
+#include <unistd.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include <time.h>
-#include <linux/videodev2.h>
-#include <errno.h>
-#include <fcntl.h>
+
 #include <drm_fourcc.h>
 
 #include "glhelp.h"

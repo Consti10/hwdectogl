@@ -108,7 +108,7 @@ static int decode_write(egl_aux_t *da_out, EGLDisplay *egl_display, AVCodecConte
 	return ret;
   }
 
-  while (1) {
+  while (true) {
 
 	if (!(frame = av_frame_alloc()) || !(sw_frame = av_frame_alloc())) {
 	  fprintf(stderr, "Can not alloc frame\n");
@@ -137,6 +137,7 @@ static int decode_write(egl_aux_t *da_out, EGLDisplay *egl_display, AVCodecConte
 
 	/// runs every frame 
 	if (da_out->texture == 0) {
+	  std::cout<<"Generating texture\n";
 
 	  EGLint attribs[50];
 	  EGLint * a = attribs;

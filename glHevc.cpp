@@ -346,7 +346,7 @@ int main(int argc, char *argv[]) {
 	window = glfwCreateWindow(WIDTH, HEIGHT, __FILE__, NULL, NULL);
 	glfwMakeContextCurrent(window);
 
-	//EGLDisplay egl_display = glfwGetEGLDisplay();
+	EGLDisplay egl_display = glfwGetEGLDisplay();
 	if(egl_display == EGL_NO_DISPLAY) {
 		printf("error: glfwGetEGLDisplay no EGLDisplay returned\n");
 	}

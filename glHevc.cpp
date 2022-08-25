@@ -226,6 +226,7 @@ static int decode_write(egl_aux_t *da_out, EGLDisplay *egl_display, AVCodecConte
             fprintf(stderr, "Failed to dump raw data.\n");
             goto fail;
         }
+		av_freep(&buffer);
 #endif
 	///-------------   END debug  ------------------------------------------
 
@@ -234,7 +235,6 @@ static int decode_write(egl_aux_t *da_out, EGLDisplay *egl_display, AVCodecConte
     fail:
         av_frame_free(&frame);
         av_frame_free(&sw_frame);
-        av_freep(&buffer);
         if (ret < 0)
             return ret;
     }

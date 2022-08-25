@@ -189,9 +189,9 @@ static int decode_write(egl_aux_t *da_out, EGLDisplay *egl_display, AVCodecConte
 	}
 	
 	///-------------   DEBUG  -----------------------------------------------
-	uint8_t *buffer = NULL;
+#if 0
+	  uint8_t *buffer = NULL;
 	int size=-1;
-#if 0	
         if (frame->format == hw_pix_fmt) {
             /* retrieve data from GPU to CPU */
             if ((ret = av_hwframe_transfer_data(sw_frame, frame, 0)) < 0) {

@@ -37,6 +37,8 @@ extern "C" {
 #include "libavutil/hwcontext_drm.h"
 }
 
+#include "user_input.h"
+
 static AVBufferRef *hw_device_ctx = NULL;
 static enum AVPixelFormat hw_pix_fmt;
 static FILE *output_file = NULL;
@@ -332,6 +334,8 @@ GLint common_get_shader_program(const char *vertex_shader_source, const char *fr
 
 int main(int argc, char *argv[]) {
 
+  auto options= parse_run_parameters(argc,argv);
+
 	GLuint shader_program, vbo;
 	GLint pos;
 	GLint uvs;
@@ -384,12 +388,7 @@ int main(int argc, char *argv[]) {
     AVCodec *decoder = NULL;
     AVPacket packet;
     enum AVHWDeviceType type;
-    int i;  
-
-    if (argc < 2) {
-        fprintf(stderr, "Usage: %s <input file> \n", argv[0]);
-        return -1;
-    }
+    int i;
 
     type = av_hwdevice_find_type_by_name("drm");
     
@@ -404,8 +403,8 @@ int main(int argc, char *argv[]) {
     }
 
     /// open the input file
-    if (avformat_open_input(&input_ctx, argv[1], NULL, NULL) != 0) {
-        fprintf(stderr, "Cannot open input file '%s'\n", argv[2]);
+    if (avformat_open_input(&input_ctx, options.filename.c_str(), NULL, NULL) != 0) {
+        fprintf(stderr, "Cannot open input file '%s'\n", options.filename.c_str());
         return -1;
     }
 

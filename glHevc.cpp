@@ -113,7 +113,10 @@ static int decode_write(egl_aux_t *da_out, EGLDisplay *egl_display, AVCodecConte
         if (!(frame = av_frame_alloc()) || !(sw_frame = av_frame_alloc())) {
             fprintf(stderr, "Can not alloc frame\n");
             ret = AVERROR(ENOMEM);
-            goto fail;
+		  av_frame_free(&frame);
+		  av_frame_free(&sw_frame);
+		  if (ret < 0)
+			return ret;
         }
 
         ret = avcodec_receive_frame(avctx, frame);
@@ -123,7 +126,10 @@ static int decode_write(egl_aux_t *da_out, EGLDisplay *egl_display, AVCodecConte
             return 0; /// goes sends/gets another packet.
         } else if (ret < 0) {
             fprintf(stderr, "Error while decoding\n");
-            goto fail;
+		  av_frame_free(&frame);
+		  av_frame_free(&sw_frame);
+		  if (ret < 0)
+			return ret;
         }
 
 	const AVDRMFrameDescriptor *desc = (AVDRMFrameDescriptor*)frame->data[0];

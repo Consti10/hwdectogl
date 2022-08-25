@@ -15,6 +15,7 @@
 #include <cerrno>
 #include <fcntl.h>
 #include <unistd.h>
+#include <chrono>
 
 #define GLFW_INCLUDE_ES2
 extern "C" {
@@ -471,10 +472,14 @@ int main(int argc, char *argv[]) {
 	}
 
         if (video_stream == packet.stream_index) {
-	    
+
+		    const auto before=std::chrono::steady_clock::now();
+
             ret = decode_write(da, &egl_display, decoder_ctx, &packet);
 	    
 	    if(da->fd > -1 && da->texture >= 0) {
+		  const auto delta=std::chrono::steady_clock::now()-before;
+		  std::cout<<"Decode_write took:"<<std::chrono::duration_cast<std::chrono::milliseconds>(delta).count()<<"ms\n";
 		
 		///printf("Fd: %d	Texture: %d\n", da->fd, da->texture);
 		

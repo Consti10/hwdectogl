@@ -442,6 +442,9 @@ int main(int argc, char *argv[]) {
         return -1;
 
     decoder_ctx->get_format  = get_hw_format;
+	// this reduced latency a lot in hello_drmprime, still needed ?!
+  decoder_ctx->thread_count = 1;
+
     printf("Codec Format: %s\n", decoder_ctx->codec->name);
 
     if (hw_decoder_init(decoder_ctx, type) < 0) {

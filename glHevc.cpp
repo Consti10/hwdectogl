@@ -8,11 +8,6 @@
 // This needs a new Mesa probably higher than v21.
 // And it needs rpi-ffmpeg.
 
-#define GLFW_INCLUDE_ES2
-extern "C" {
-#include <GLFW/glfw3.h>
-}
-
 #include <cstdio>
 #include <cstdlib>
 #include <ctime>
@@ -20,12 +15,14 @@ extern "C" {
 #include <cerrno>
 #include <fcntl.h>
 #include <unistd.h>
-#include <stdio.h>
-#include <stdlib.h>
+
+#define GLFW_INCLUDE_ES2
+extern "C" {
+#include <GLFW/glfw3.h>
+#include "glhelp.h"
+}
 
 #include <drm_fourcc.h>
-
-#include "glhelp.h"
 
 extern "C" {
 /// video file decode
@@ -349,7 +346,7 @@ int main(int argc, char *argv[]) {
 	window = glfwCreateWindow(WIDTH, HEIGHT, __FILE__, NULL, NULL);
 	glfwMakeContextCurrent(window);
 
-	EGLDisplay egl_display = glfwGetEGLDisplay();
+	//EGLDisplay egl_display = glfwGetEGLDisplay();
 	if(egl_display == EGL_NO_DISPLAY) {
 		printf("error: glfwGetEGLDisplay no EGLDisplay returned\n");
 	}

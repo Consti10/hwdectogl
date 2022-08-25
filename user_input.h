@@ -33,6 +33,8 @@ static UserOptions parse_run_parameters(int argc, char *argv[]){
 		break;
 	  case 'h':ret.height=std::atoi(tmp_optarg);
 		break;
+	  case 'i':ret.filename=std::string(tmp_optarg);
+		break;
 	  case '?':
 	  default:
 		std::cout << "Usage: \n" <<

@@ -8,7 +8,7 @@
 #include <getopt.h>
 #include <iostream>
 
-static const char optstr[] = "?:da";
+static const char optstr[] = "?w:h:i";
 static const struct option long_options[] = {
 	{"width", required_argument, nullptr, 'w'},
 	{"height", required_argument, nullptr, 'h'},

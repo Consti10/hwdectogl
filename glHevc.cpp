@@ -9,7 +9,9 @@
 // And it needs rpi-ffmpeg.
 
 #define GLFW_INCLUDE_ES2
+extern "C" {
 #include <GLFW/glfw3.h>
+}
 
 #include <stdio.h>
 #include <stdlib.h>

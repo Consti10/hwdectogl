@@ -247,10 +247,6 @@ static int decode_write(egl_aux_t *da_out, EGLDisplay *egl_display, AVCodecConte
 
 
 
-//orig
-static const GLuint WIDTH = 1280;
-static const GLuint HEIGHT = 720;
-
 static const GLchar* vertex_shader_source =
 	"#version 300 es\n"
 	"in vec3 position;\n"
@@ -347,7 +343,7 @@ int main(int argc, char *argv[]) {
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 2);
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 0);
 	glfwWindowHint(GLFW_RESIZABLE, GL_FALSE);
-	window = glfwCreateWindow(WIDTH, HEIGHT, __FILE__, NULL, NULL);
+	window = glfwCreateWindow(options.width, options.height, __FILE__, NULL, NULL);
 	glfwMakeContextCurrent(window);
 
 	//EGLDisplay egl_display = glfwGetEGLDisplay();
@@ -364,7 +360,7 @@ int main(int argc, char *argv[]) {
 	uvs = glGetAttribLocation(shader_program, "tx_coords");
 
 	glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
-	glViewport(0, 0, WIDTH, HEIGHT);
+	glViewport(0, 0, options.width, options.height);
 
 	glGenBuffers(1, &vbo);
 	glBindBuffer(GL_ARRAY_BUFFER, vbo);

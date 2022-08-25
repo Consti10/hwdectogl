@@ -461,50 +461,50 @@ int main(int argc, char *argv[]) {
     egl_aux_t* da = (egl_aux_t*) malloc(sizeof *da);
     da->fd=-1;
     da->texture=0;
-    	
-    while (ret>=0 && !glfwWindowShouldClose(window)) {
-	
+
+  while (ret>=0 && !glfwWindowShouldClose(window)) {
+
 	glfwPollEvents();  /// for mouse window closing
-	
-        if ((ret = av_read_frame(input_ctx, &packet)) < 0) {
-	    printf("fail reading a packet...\n");
-            break;
+
+	if ((ret = av_read_frame(input_ctx, &packet)) < 0) {
+	  printf("fail reading a packet...\n");
+	  break;
 	}
 
-        if (video_stream == packet.stream_index) {
+	if (video_stream == packet.stream_index) {
 
-		    const auto before=std::chrono::steady_clock::now();
+	  const auto before=std::chrono::steady_clock::now();
 
-            ret = decode_write(da, &egl_display, decoder_ctx, &packet);
-	    
-	    if(da->fd > -1 && da->texture >= 0) {
-		  const auto delta=std::chrono::steady_clock::now()-before;
-		  std::cout<<"Decode_write took:"<<std::chrono::duration_cast<std::chrono::milliseconds>(delta).count()<<"ms\n";
-		
+	  ret = decode_write(da, &egl_display, decoder_ctx, &packet);
+
+	  if(da->fd > -1 && da->texture >= 0) {
+		const auto delta=std::chrono::steady_clock::now()-before;
+		std::cout<<"Decode_write took:"<<std::chrono::duration_cast<std::chrono::milliseconds>(delta).count()<<"ms\n";
+
 		///printf("Fd: %d	Texture: %d\n", da->fd, da->texture);
-		
+
 		///glBindTexture(GL_TEXTURE_EXTERNAL_OES, da->texture);
 		///glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);  //"u_blitter:600: Caught recursion. This is a driver bug."
 		glClearColor(0.0, 0.0, 0.0, 1.0);
 		glClear(GL_COLOR_BUFFER_BIT);
 		glUseProgram(shader_program);
 		glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
-		glfwSwapBuffers(window);	
-		
+		glfwSwapBuffers(window);
+
 		/// flush
 		glDeleteTextures(1, &da->texture);
 		da->texture = 0;
 		da->fd = -1;
-	    }
-	
-	    usleep(3000); // hacky backy
+	  }
+
+	  usleep(3000); // hacky backy
 	}
 
 	av_packet_unref(&packet);
-    }
+  }
 
-	printf("END avcodec test\n");
-	glDeleteBuffers(1, &vbo);
-	glfwTerminate();
-	return 0;
+  printf("END avcodec test\n");
+  glDeleteBuffers(1, &vbo);
+  glfwTerminate();
+  return 0;
 }

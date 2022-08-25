@@ -99,38 +99,38 @@ static enum AVPixelFormat get_hw_format(AVCodecContext *ctx,
 // This function is in the main loop.
 static int decode_write(egl_aux_t *da_out, EGLDisplay *egl_display, AVCodecContext * const avctx, AVPacket *packet)
 {
-    AVFrame *frame = NULL, *sw_frame = NULL;
-    int ret = 0;
+  AVFrame *frame = NULL, *sw_frame = NULL;
+  int ret = 0;
 
-    ret = avcodec_send_packet(avctx, packet);
-    if (ret < 0) {
-        fprintf(stderr, "Error during decoding\n");
-        return ret;
-    }
-    
-    while (1) {
-	
-        if (!(frame = av_frame_alloc()) || !(sw_frame = av_frame_alloc())) {
-            fprintf(stderr, "Can not alloc frame\n");
-            ret = AVERROR(ENOMEM);
-		  av_frame_free(&frame);
-		  av_frame_free(&sw_frame);
-		  if (ret < 0)
-			return ret;
-        }
+  ret = avcodec_send_packet(avctx, packet);
+  if (ret < 0) {
+	fprintf(stderr, "Error during decoding\n");
+	return ret;
+  }
 
-        ret = avcodec_receive_frame(avctx, frame);
-        if (ret == AVERROR(EAGAIN) || ret == AVERROR_EOF) {
-            av_frame_free(&frame);
-            av_frame_free(&sw_frame);
-            return 0; /// goes sends/gets another packet.
-        } else if (ret < 0) {
-            fprintf(stderr, "Error while decoding\n");
-		  av_frame_free(&frame);
-		  av_frame_free(&sw_frame);
-		  if (ret < 0)
-			return ret;
-        }
+  while (1) {
+
+	if (!(frame = av_frame_alloc()) || !(sw_frame = av_frame_alloc())) {
+	  fprintf(stderr, "Can not alloc frame\n");
+	  ret = AVERROR(ENOMEM);
+	  av_frame_free(&frame);
+	  av_frame_free(&sw_frame);
+	  if (ret < 0)
+		return ret;
+	}
+
+	ret = avcodec_receive_frame(avctx, frame);
+	if (ret == AVERROR(EAGAIN) || ret == AVERROR_EOF) {
+	  av_frame_free(&frame);
+	  av_frame_free(&sw_frame);
+	  return 0; /// goes sends/gets another packet.
+	} else if (ret < 0) {
+	  fprintf(stderr, "Error while decoding\n");
+	  av_frame_free(&frame);
+	  av_frame_free(&sw_frame);
+	  if (ret < 0)
+		return ret;
+	}
 
 	const AVDRMFrameDescriptor *desc = (AVDRMFrameDescriptor*)frame->data[0];
 	da_out->fd = desc->objects[0].fd;
@@ -138,60 +138,60 @@ static int decode_write(egl_aux_t *da_out, EGLDisplay *egl_display, AVCodecConte
 	/// runs every frame 
 	if (da_out->texture == 0) {
 
-	EGLint attribs[50];
-        EGLint * a = attribs;
-        const EGLint * b = texgen_attrs;
+	  EGLint attribs[50];
+	  EGLint * a = attribs;
+	  const EGLint * b = texgen_attrs;
 
-        *a++ = EGL_WIDTH;
-        *a++ = av_frame_cropped_width(frame);
-        *a++ = EGL_HEIGHT;
-        *a++ = av_frame_cropped_height(frame);
-        *a++ = EGL_LINUX_DRM_FOURCC_EXT;
-        *a++ = desc->layers[0].format;
-	
-	int i, j;
-	for (i = 0; i < desc->nb_layers; ++i) {
-            for (j = 0; j < desc->layers[i].nb_planes; ++j) {
-                const AVDRMPlaneDescriptor * const p = desc->layers[i].planes + j;
-                const AVDRMObjectDescriptor * const obj = desc->objects + p->object_index;
-                *a++ = *b++;
-                *a++ = obj->fd;
-                *a++ = *b++;
-                *a++ = p->offset;
-                *a++ = *b++;
-                *a++ = p->pitch;
-                if (obj->format_modifier == 0) {
-                   b += 2;
-                }
-                else {
-                   *a++ = *b++;
-                   *a++ = (EGLint)(obj->format_modifier & 0xFFFFFFFF);
-                   *a++ = *b++;
-                   *a++ = (EGLint)(obj->format_modifier >> 32);
-                }
-            }
-        }
+	  *a++ = EGL_WIDTH;
+	  *a++ = av_frame_cropped_width(frame);
+	  *a++ = EGL_HEIGHT;
+	  *a++ = av_frame_cropped_height(frame);
+	  *a++ = EGL_LINUX_DRM_FOURCC_EXT;
+	  *a++ = desc->layers[0].format;
 
-        *a = EGL_NONE;
+	  int i, j;
+	  for (i = 0; i < desc->nb_layers; ++i) {
+		for (j = 0; j < desc->layers[i].nb_planes; ++j) {
+		  const AVDRMPlaneDescriptor * const p = desc->layers[i].planes + j;
+		  const AVDRMObjectDescriptor * const obj = desc->objects + p->object_index;
+		  *a++ = *b++;
+		  *a++ = obj->fd;
+		  *a++ = *b++;
+		  *a++ = p->offset;
+		  *a++ = *b++;
+		  *a++ = p->pitch;
+		  if (obj->format_modifier == 0) {
+			b += 2;
+		  }
+		  else {
+			*a++ = *b++;
+			*a++ = (EGLint)(obj->format_modifier & 0xFFFFFFFF);
+			*a++ = *b++;
+			*a++ = (EGLint)(obj->format_modifier >> 32);
+		  }
+		}
+	  }
 
-	const EGLImage image = eglCreateImageKHR(*egl_display,
-                                              EGL_NO_CONTEXT,
-                                              EGL_LINUX_DMA_BUF_EXT,
-                                              NULL, attribs);
-	if (!image) {
+	  *a = EGL_NONE;
+
+	  const EGLImage image = eglCreateImageKHR(*egl_display,
+											   EGL_NO_CONTEXT,
+											   EGL_LINUX_DMA_BUF_EXT,
+											   NULL, attribs);
+	  if (!image) {
 		printf("Failed to create EGLImage\n");
 		return -1;
-	}
+	  }
 
-	    /// his
-           glGenTextures(1, &da_out->texture);
-	   glEnable(GL_TEXTURE_EXTERNAL_OES);
-           glBindTexture(GL_TEXTURE_EXTERNAL_OES, da_out->texture);
-           glTexParameteri(GL_TEXTURE_EXTERNAL_OES, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-           glTexParameteri(GL_TEXTURE_EXTERNAL_OES, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-           glEGLImageTargetTexture2DOES(GL_TEXTURE_EXTERNAL_OES, image);
-	   
-           eglDestroyImageKHR(*egl_display, image);
+	  /// his
+	  glGenTextures(1, &da_out->texture);
+	  glEnable(GL_TEXTURE_EXTERNAL_OES);
+	  glBindTexture(GL_TEXTURE_EXTERNAL_OES, da_out->texture);
+	  glTexParameteri(GL_TEXTURE_EXTERNAL_OES, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+	  glTexParameteri(GL_TEXTURE_EXTERNAL_OES, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+	  glEGLImageTargetTexture2DOES(GL_TEXTURE_EXTERNAL_OES, image);
+
+	  eglDestroyImageKHR(*egl_display, image);
 	}
 	
 	///-------------   DEBUG  -----------------------------------------------

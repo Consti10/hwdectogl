@@ -360,7 +360,7 @@ int main(int argc, char *argv[]) {
 	glEnableVertexAttribArray(pos);
 	glEnableVertexAttribArray(uvs);
 	glVertexAttribPointer(pos, 3, GL_FLOAT, GL_FALSE, 0, (GLvoid*)0);
-	glVertexAttribPointer(uvs, 2, GL_FLOAT, GL_FALSE, 0, sizeof(vertices)); /// last is offset to loc in buf memory
+	glVertexAttribPointer(uvs, 2, GL_FLOAT, GL_FALSE, 0, (GLvoid*)sizeof(vertices)); /// last is offset to loc in buf memory
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 
 	/// END OpenGL setup ------------------------------------
@@ -451,7 +451,8 @@ int main(int argc, char *argv[]) {
 
 	/// --- MAIN Loop ------------------------------------------------------ 
 
-    egl_aux_t* da = malloc(sizeof *da);
+    //egl_aux_t* da = malloc(sizeof *da);
+    egl_aux_t* da = (egl_aux_t*) malloc(sizeof *da);
     da->fd=-1;
     da->texture=0;
     	

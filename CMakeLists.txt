@@ -62,7 +62,7 @@ include_directories(
 	/home/pi/dev/rpi-ffmpeg
 	/home/pi/dev/rpi-ffmpeg/out/armv7-buster-shared-rel )
 
-add_executable(glHevc glHevc.c)
+add_executable(glHevc glHevc.cpp)
 	
 target_link_libraries(glHevc ${FFMPEG_LIBRARIES} -ldrm -lpthread -lm -lGLESv2 -lglfw -lEGL)
 

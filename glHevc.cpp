@@ -21,6 +21,7 @@
 
 #include "glhelp.h"
 
+extern "C" {
 /// video file decode
 #include <libavcodec/avcodec.h>
 #include <libavformat/avformat.h>
@@ -29,8 +30,9 @@
 #include <libavutil/opt.h>
 #include <libavutil/avassert.h>
 #include <libavutil/imgutils.h>
-
+//
 #include "libavutil/hwcontext_drm.h"
+}
 
 static AVBufferRef *hw_device_ctx = NULL;
 static enum AVPixelFormat hw_pix_fmt;

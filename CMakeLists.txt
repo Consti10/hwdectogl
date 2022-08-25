@@ -1,10 +1,20 @@
-cmake_minimum_required(VERSION 3.2)
+cmake_minimum_required(VERSION 3.16.3)
+set(CMAKE_CXX_STANDARD 17)
+
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR};/usr/local")
 
 project(hwdectogl)
 
-set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -W -Wall -Wextra -g -O2 -mfpu=neon")
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -W -Wall -Wextra -g -O2 -mfpu=neon")
+set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -W -Wall -Wextra -g -O2")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -W -Wall -Wextra -g -O2")
+
+include(CheckCXXCompilerFlag)
+check_cxx_compiler_flag("-mfpu=neon" COMPILER_SUPPORTS_NEON)
+if(COMPILER_SUPPORTS_NEON)
+	message(STATUS "Compiler supports NEON")
+	set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -mfpu=neon")
+	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -mfpu=neon")
+endif()
 
 # ffmpeg search path, and others. using -shared- makes it build! And seems to work!
 set(CMAKE_PREFIX_PATH "/home/pi/dev/rpi-ffmpeg/out/armv7-buster-shared-rel/install")

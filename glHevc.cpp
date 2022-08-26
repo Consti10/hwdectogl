@@ -212,7 +212,7 @@ static int decode_and_wait_for_frame(AVCodecContext * const avctx,AVPacket *pack
   AVFrame *frame = nullptr;
   // testing
   //check_single_nalu(packet->data,packet->size);
-  //std::cout<<"Decode packet:"<<packet->pos<<" size:"<<packet->size<<" B\n";
+  std::cout<<"Decode packet:"<<packet->pos<<" size:"<<packet->size<<" B\n";
   const auto before=std::chrono::steady_clock::now();
   int ret = avcodec_send_packet(avctx, packet);
   if (ret < 0) {
@@ -453,8 +453,6 @@ int main(int argc, char *argv[]) {
 	return -1;
 
   decoder_ctx->get_format  = get_hw_format;
-  // this reduced latency a lot in hello_drmprime, still needed ?!
-  decoder_ctx->thread_count = 1;
 
   printf("Codec Format: %s\n", decoder_ctx->codec->name);
 
@@ -462,6 +460,8 @@ int main(int argc, char *argv[]) {
 	printf("Failed hw_decoder_init\n");
 	return -1;
   }
+  // this reduced latency a lot in hello_drmprime, still needed ?!
+  decoder_ctx->thread_count = 1;
 
   if ((ret = avcodec_open2(decoder_ctx, decoder, NULL)) < 0) {
 	fprintf(stderr, "Failed to open codec for stream #%u\n", video_stream);

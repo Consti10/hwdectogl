@@ -248,7 +248,7 @@ static int decode_and_wait_for_frame(AVCodecContext * const avctx,AVPacket *pack
 	  //x_push_into_filter_graph(dpo,frame);
 	  write_texture(da_out,egl_display,frame);
 	}else{
-	  //std::cout<<"avcodec_receive_frame returned:"<<ret<<"\n";
+	  std::cout<<"avcodec_receive_frame returned:"<<ret<<"\n";
 	}
   }
   av_frame_free(&frame);

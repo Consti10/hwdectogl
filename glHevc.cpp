@@ -229,9 +229,11 @@ static const GLchar* fragment_shader_source =
 	"}\n";
 
 /// negative x,y is bottom left and first vertex
+//Consti10: Video was flipped horizontally (at least big buck bunny)
 static const GLfloat vertices[][4][3] =
 	{
-		{ {-1.0, -1.0, 0.0}, { 1.0, -1.0, 0.0}, {-1.0, 1.0, 0.0}, {1.0, 1.0, 0.0} }
+		//{ {-1.0, -1.0, 0.0}, { 1.0, -1.0, 0.0}, {-1.0, 1.0, 0.0}, {1.0, 1.0, 0.0} }
+		{ {-1.0, 1.0, 0.0}, {-1.0, -1.0, 0.0}, { 1.0, -1.0, 0.0}, {1.0, 1.0, 0.0} }
 	};
 static const GLfloat uv_coords[][4][2] =
 	{

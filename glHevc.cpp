@@ -365,11 +365,15 @@ int main(int argc, char *argv[]) {
   glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 2);
   glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 0);
   glfwWindowHint(GLFW_RESIZABLE, GL_FALSE);
+  if(options.disable_vsync){
+	glfwWindowHint( GLFW_DOUBLEBUFFER,GL_FALSE );
+  }
   window = glfwCreateWindow(options.width, options.height, __FILE__, NULL, NULL);
   glfwMakeContextCurrent(window);
   if(options.disable_vsync){
-	std::cout<<"Disabling VSYNC\n";
-	glfwSwapInterval( 0 );
+	// Doesn't work
+	//std::cout<<"Disabling VSYNC\n";
+	//glfwSwapInterval( 0 );
   }
 
   //EGLDisplay egl_display = glfwGetEGLDisplay();
@@ -528,7 +532,8 @@ int main(int argc, char *argv[]) {
 		///glBindTexture(GL_TEXTURE_EXTERNAL_OES, da->texture);
 		///glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);  //"u_blitter:600: Caught recursion. This is a driver bug."
 		glClearColor(0.0, 0.0, 0.0, 1.0);
-		glClear(GL_COLOR_BUFFER_BIT);
+		//glClear(GL_COLOR_BUFFER_BIT);
+		glClear(GL_COLOR_BUFFER_BIT |GL_DEPTH_BUFFER_BIT| GL_STENCIL_BUFFER_BIT);
 		glUseProgram(shader_program);
 		glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
 		const auto deltaRender=std::chrono::steady_clock::now()-beforeRendering;
@@ -536,7 +541,11 @@ int main(int argc, char *argv[]) {
 		  std::cout<<"gl send commands took:"<<((float)std::chrono::duration_cast<std::chrono::microseconds>(deltaRender).count()/1000.0f)<<" ms\n";
 		}
 		const auto beforeSwap=std::chrono::steady_clock::now();
-		glfwSwapBuffers(window);
+		if(options.disable_vsync){
+		  glFlush();
+		}else{
+		  glfwSwapBuffers(window);
+		}
 		const auto deltaSwap=std::chrono::steady_clock::now()-beforeSwap;
 		std::cout<<"swap took:"<<((float)std::chrono::duration_cast<std::chrono::microseconds>(deltaSwap).count()/1000.0f)<<" ms\n";
 

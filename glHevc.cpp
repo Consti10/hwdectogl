@@ -368,7 +368,7 @@ int main(int argc, char *argv[]) {
   if(options.disable_vsync){
 	glfwWindowHint( GLFW_DOUBLEBUFFER,GL_FALSE );
   }
-  window = glfwCreateWindow(options.width, options.height, __FILE__, NULL, NULL);
+  window = glfwCreateWindow(options.width, options.height, __FILE__, glfwGetPrimaryMonitor(), NULL);
   glfwMakeContextCurrent(window);
   if(options.disable_vsync){
 	// Doesn't work

@@ -16,6 +16,7 @@
 #include <fcntl.h>
 #include <unistd.h>
 #include <chrono>
+#include "include/LEDSwap.h"
 
 #define GLFW_INCLUDE_ES2
 extern "C" {
@@ -504,6 +505,13 @@ int main(int argc, char *argv[]) {
 	}
 
 	if (video_stream == packet.stream_index) {
+	  if(options.led_swap_enable) {
+		// wait for a keyboard input
+		printf("Press ENTER key to Feed new frame\n");
+		auto tmp = getchar();
+		// change LED, feed one new frame
+		switch_led_on_off();
+	  }
 
 	  const auto before=std::chrono::steady_clock::now();
 

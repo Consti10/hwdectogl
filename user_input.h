@@ -8,12 +8,13 @@
 #include <getopt.h>
 #include <iostream>
 
-static const char optstr[] = "?w:h:iv";
+static const char optstr[] = "?w:h:ivl";
 static const struct option long_options[] = {
 	{"width", required_argument, nullptr, 'w'},
 	{"height", required_argument, nullptr, 'h'},
 	{"input", required_argument, nullptr, 'i'},
 	{"disable-vsync", no_argument, nullptr, 'v'},
+	{"led-swap-enable", no_argument, nullptr, 'l'},
 	{nullptr, 0, nullptr, 0},
 };
 
@@ -23,6 +24,7 @@ struct UserOptions {
   int height=720;
   std::string filename;
   bool disable_vsync=false;
+  bool led_swap_enable=false;
 };
 
 static UserOptions parse_run_parameters(int argc, char *argv[]){
@@ -38,6 +40,8 @@ static UserOptions parse_run_parameters(int argc, char *argv[]){
 	  case 'i':ret.filename=std::string(tmp_optarg);
 		break;
 	  case 'v':ret.disable_vsync= true;
+		break;
+	  case 'l':ret.led_swap_enable= true;
 		break;
 	  case '?':
 	  default:

@@ -212,7 +212,7 @@ static int decode_and_wait_for_frame(AVCodecContext * const avctx,AVPacket *pack
   AVFrame *frame = nullptr;
   // testing
   //check_single_nalu(packet->data,packet->size);
-  std::cout<<"Decode packet:"<<packet->pos<<" size:"<<packet->size<<" B\n";
+  //std::cout<<"Decode packet:"<<packet->pos<<" size:"<<packet->size<<" B\n";
   const auto before=std::chrono::steady_clock::now();
   int ret = avcodec_send_packet(avctx, packet);
   if (ret < 0) {
@@ -227,6 +227,8 @@ static int decode_and_wait_for_frame(AVCodecContext * const avctx,AVPacket *pack
 	return ret;
   }
   // Poll until we get the frame out
+  // XX first few frames ?!
+  const auto beginReceiveFrame=std::chrono::steady_clock::now();
   bool gotFrame=false;
   while (!gotFrame){
 	ret = avcodec_receive_frame(avctx, frame);
@@ -247,7 +249,12 @@ static int decode_and_wait_for_frame(AVCodecContext * const avctx,AVPacket *pack
 	  // display frame
 	  write_texture(da_out,egl_display,frame);
 	}else{
-	  std::cout<<"avcodec_receive_frame returned:"<<ret<<"\n";
+	  //std::cout<<"avcodec_receive_frame returned:"<<ret<<"\n";
+	}
+	if(std::chrono::steady_clock::now()-beginReceiveFrame>std::chrono::seconds(5)){
+	  std::cout<<"No frame after 5 seconds\n";
+	  av_frame_free(&frame);
+	  return -1;
 	}
   }
   av_frame_free(&frame);

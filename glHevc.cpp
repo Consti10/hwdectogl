@@ -546,11 +546,12 @@ int main(int argc, char *argv[]) {
 		  std::cout<<"gl send commands took:"<<((float)std::chrono::duration_cast<std::chrono::microseconds>(deltaRender).count()/1000.0f)<<" ms\n";
 		}
 		const auto beforeSwap=std::chrono::steady_clock::now();
-		if(options.disable_vsync){
+		/*if(options.disable_vsync){
 		  glFlush();
 		}else{
 		  glfwSwapBuffers(window);
-		}
+		}*/
+		glfwSwapBuffers(window);
 		const auto deltaSwap=std::chrono::steady_clock::now()-beforeSwap;
 		std::cout<<"swap took:"<<((float)std::chrono::duration_cast<std::chrono::microseconds>(deltaSwap).count()/1000.0f)<<" ms\n";
 

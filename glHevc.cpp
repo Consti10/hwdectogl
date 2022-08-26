@@ -406,7 +406,6 @@ int main(int argc, char *argv[]) {
   AVCodec *decoder = NULL;
   AVPacket packet;
   enum AVHWDeviceType type;
-  int i;
 
   type = av_hwdevice_find_type_by_name("drm");
 

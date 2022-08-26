@@ -212,6 +212,7 @@ static int decode_and_wait_for_frame(AVCodecContext * const avctx,AVPacket *pack
   // testing
   //check_single_nalu(packet->data,packet->size);
   //std::cout<<"Decode packet:"<<packet->pos<<" size:"<<packet->size<<" B\n";
+  packet->pts=getTimeUs();
   const auto before=std::chrono::steady_clock::now();
   int ret = avcodec_send_packet(avctx, packet);
   if (ret < 0) {

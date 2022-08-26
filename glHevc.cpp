@@ -419,9 +419,11 @@ int main(int argc, char *argv[]) {
 	fprintf(stderr, "\n");
 	return -1;
   }
+  AVDictionary* av_dictionary=NULL;
+  av_dict_set(&av_dictionary, "protocol_whitelist", "file,udp,rtp", 0);
 
   /// open the input file
-  if (avformat_open_input(&input_ctx, options.filename.c_str(), NULL, NULL) != 0) {
+  if (avformat_open_input(&input_ctx, options.filename.c_str(), NULL, &av_dictionary) != 0) {
 	fprintf(stderr, "Cannot open input file '%s'\n", options.filename.c_str());
 	return -1;
   }

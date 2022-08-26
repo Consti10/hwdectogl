@@ -515,7 +515,9 @@ int main(int argc, char *argv[]) {
 		glUseProgram(shader_program);
 		glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
 		const auto deltaRender=std::chrono::steady_clock::now()-beforeRendering;
-		std::cout<<"gl send commands took:"<<((float)std::chrono::duration_cast<std::chrono::microseconds>(deltaRender).count()/1000.0f)<<" ms\n";
+		if(deltaRender>std::chrono::milliseconds(2)){
+		  std::cout<<"gl send commands took:"<<((float)std::chrono::duration_cast<std::chrono::microseconds>(deltaRender).count()/1000.0f)<<" ms\n";
+		}
 		const auto beforeSwap=std::chrono::steady_clock::now();
 		glfwSwapBuffers(window);
 		const auto deltaSwap=std::chrono::steady_clock::now()-beforeSwap;

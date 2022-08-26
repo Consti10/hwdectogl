@@ -367,7 +367,7 @@ int main(int argc, char *argv[]) {
   glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 0);
   glfwWindowHint(GLFW_RESIZABLE, GL_FALSE);
   if(options.disable_vsync){
-	glfwWindowHint( GLFW_DOUBLEBUFFER,GL_FALSE );
+	//glfwWindowHint( GLFW_DOUBLEBUFFER,GL_FALSE );
   }
   if(options.disable_vsync){
 	window = glfwCreateWindow(options.width, options.height, __FILE__, glfwGetPrimaryMonitor(), NULL);
@@ -378,7 +378,7 @@ int main(int argc, char *argv[]) {
   if(options.disable_vsync){
 	// Doesn't work
 	//std::cout<<"Disabling VSYNC\n";
-	//glfwSwapInterval( 0 );
+	glfwSwapInterval( 0 );
   }
 
   //EGLDisplay egl_display = glfwGetEGLDisplay();

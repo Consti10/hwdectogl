@@ -378,7 +378,7 @@ int main(int argc, char *argv[]) {
   if(options.disable_vsync){
 	// Doesn't work
 	//std::cout<<"Disabling VSYNC\n";
-	glfwSwapInterval( 0 );
+	//glfwSwapInterval( 0 );
   }
 
   //EGLDisplay egl_display = glfwGetEGLDisplay();

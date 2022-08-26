@@ -353,6 +353,7 @@ GLint common_get_shader_program(const char *vertex_shader_source, const char *fr
 int main(int argc, char *argv[]) {
 
   auto options= parse_run_parameters(argc,argv);
+  std::cout<<"Disable VSYNC:"<<(options.disable_vsync?"Y":"N");
 
   GLuint shader_program, vbo;
   GLint pos;
@@ -377,7 +378,7 @@ int main(int argc, char *argv[]) {
   if(options.disable_vsync){
 	// Doesn't work
 	//std::cout<<"Disabling VSYNC\n";
-	//glfwSwapInterval( 0 );
+	glfwSwapInterval( 0 );
   }
 
   //EGLDisplay egl_display = glfwGetEGLDisplay();

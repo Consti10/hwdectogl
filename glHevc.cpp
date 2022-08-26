@@ -514,9 +514,12 @@ int main(int argc, char *argv[]) {
 		glClear(GL_COLOR_BUFFER_BIT);
 		glUseProgram(shader_program);
 		glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
-		glfwSwapBuffers(window);
 		const auto deltaRender=std::chrono::steady_clock::now()-beforeRendering;
-		std::cout<<"Render took:"<<((float)std::chrono::duration_cast<std::chrono::microseconds>(deltaRender).count()/1000.0f)<<" ms\n";
+		std::cout<<"gl send commands took:"<<((float)std::chrono::duration_cast<std::chrono::microseconds>(deltaRender).count()/1000.0f)<<" ms\n";
+		const auto beforeSwap=std::chrono::steady_clock::now();
+		glfwSwapBuffers(window);
+		const auto deltaSwap=std::chrono::steady_clock::now()-beforeSwap;
+		std::cout<<"swap took:"<<((float)std::chrono::duration_cast<std::chrono::microseconds>(deltaSwap).count()/1000.0f)<<" ms\n";
 
 		/// flush
 		glDeleteTextures(1, &da->texture);
@@ -524,7 +527,7 @@ int main(int argc, char *argv[]) {
 		da->fd = -1;
 	  }
 
-	  usleep(3000); // hacky backy
+	  //usleep(3000); // hacky backy
 	}
 
 	av_packet_unref(&packet);

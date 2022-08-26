@@ -251,8 +251,9 @@ static int decode_and_wait_for_frame(AVCodecContext * const avctx,AVPacket *pack
 	}else{
 	  //std::cout<<"avcodec_receive_frame returned:"<<ret<<"\n";
 	}
-	if(std::chrono::steady_clock::now()-beginReceiveFrame>std::chrono::seconds(5)){
-	  std::cout<<"No frame after 5 seconds\n";
+	if(std::chrono::steady_clock::now()-beginReceiveFrame>std::chrono::seconds(3)){
+	  // Now the decode latency measurement is not correct anymore !
+	  std::cout<<"No frame after 3 seconds\n";
 	  av_frame_free(&frame);
 	  return 0; /// goes sends/gets another packet.
 	}

@@ -419,8 +419,10 @@ int main(int argc, char *argv[]) {
 	fprintf(stderr, "\n");
 	return -1;
   }
+  // These options are needed for using the foo.sdp (rtp streaming)
   AVDictionary* av_dictionary=NULL;
   av_dict_set(&av_dictionary, "protocol_whitelist", "file,udp,rtp", 0);
+  av_dict_set_int(&av_dictionary, "reorder_queue_size", 1, 0);
 
   /// open the input file
   if (avformat_open_input(&input_ctx, options.filename.c_str(), NULL, &av_dictionary) != 0) {

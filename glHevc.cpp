@@ -236,7 +236,8 @@ static const GLfloat vertices[][4][3] =
 	};
 static const GLfloat uv_coords[][4][2] =
 	{
-		{ {0.0, 0.0}, {1.0, 0.0}, {0.0, 1.0}, {1.0, 1.0} }
+		//{ {0.0, 0.0}, {1.0, 0.0}, {0.0, 1.0}, {1.0, 1.0} }
+		{ {1.0, 1.0}, {0.0, 1.0}, {1.0, 0.0}, {0.0, 0.0} }
 	};
 
 GLint common_get_shader_program(const char *vertex_shader_source, const char *fragment_shader_source) {

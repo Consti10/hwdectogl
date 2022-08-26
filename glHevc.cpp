@@ -42,7 +42,6 @@ extern "C" {
 
 static AVBufferRef *hw_device_ctx = NULL;
 static enum AVPixelFormat hw_pix_fmt;
-static FILE *output_file = NULL;
 
 static EGLint texgen_attrs[] = {
 	EGL_DMA_BUF_PLANE0_FD_EXT,

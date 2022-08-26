@@ -365,10 +365,14 @@ int main(int argc, char *argv[]) {
   glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 2);
   glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 0);
   glfwWindowHint(GLFW_RESIZABLE, GL_FALSE);
+  //if(options.disable_vsync){
+	//glfwWindowHint( GLFW_DOUBLEBUFFER,GL_FALSE );
+  //}
   if(options.disable_vsync){
-	glfwWindowHint( GLFW_DOUBLEBUFFER,GL_FALSE );
+	window = glfwCreateWindow(options.width, options.height, __FILE__, glfwGetPrimaryMonitor(), NULL);
+  }else{
+	window = glfwCreateWindow(options.width, options.height, __FILE__,NULL, NULL);
   }
-  window = glfwCreateWindow(options.width, options.height, __FILE__, glfwGetPrimaryMonitor(), NULL);
   glfwMakeContextCurrent(window);
   if(options.disable_vsync){
 	// Doesn't work

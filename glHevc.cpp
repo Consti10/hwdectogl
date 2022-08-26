@@ -489,7 +489,8 @@ int main(int argc, char *argv[]) {
 
 	  const auto before=std::chrono::steady_clock::now();
 
-	  ret = decode_write(da, &egl_display, decoder_ctx, &packet);
+	  //ret = decode_write(da, &egl_display, decoder_ctx, &packet);
+	  ret= decode_and_wait_for_frame(decoder_ctx,&packet,da,&egl_display);
 
 	  if(da->fd > -1 && da->texture >= 0) {
 		const auto delta=std::chrono::steady_clock::now()-before;

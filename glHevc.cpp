@@ -97,6 +97,7 @@ static enum AVPixelFormat get_hw_format(AVCodecContext *ctx,
 
 // Not completely sure yet how this works
 static int write_texture(egl_aux_t *da_out,EGLDisplay *egl_display,AVFrame *frame){
+  auto before=std::chrono::steady_clock::now();
   const AVDRMFrameDescriptor *desc = (AVDRMFrameDescriptor*)frame->data[0];
   da_out->fd = desc->objects[0].fd;
 
@@ -158,6 +159,8 @@ static int write_texture(egl_aux_t *da_out,EGLDisplay *egl_display,AVFrame *fram
 	glEGLImageTargetTexture2DOES(GL_TEXTURE_EXTERNAL_OES, image);
 
 	eglDestroyImageKHR(*egl_display, image);
+	auto delta=std::chrono::steady_clock::now()-before;
+	std::cout<<"Creating texture took:"<<std::chrono::duration_cast<std::chrono::milliseconds>(delta).count()<<"ms\n";
   }
   return 0;
 }

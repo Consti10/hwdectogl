@@ -50,4 +50,11 @@ static UserOptions parse_run_parameters(int argc, char *argv[]){
   return ret;
 }
 
+static uint64_t __attribute__((unused)) getTimeUs(){
+  struct timeval time;
+  gettimeofday(&time, NULL);
+  uint64_t micros = (time.tv_sec * ((uint64_t)1000*1000)) + ((uint64_t)time.tv_usec);
+  return micros;
+}
+
 #endif //HWDECTOGL__USER_INPUT_H_

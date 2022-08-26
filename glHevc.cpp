@@ -170,7 +170,6 @@ static int decode_write(egl_aux_t *da_out, EGLDisplay *egl_display, AVCodecConte
 {
   AVFrame *frame = NULL, *sw_frame = NULL;
   int ret = 0;
-
   ret = avcodec_send_packet(avctx, packet);
   if (ret < 0) {
 	fprintf(stderr, "Error during decoding\n");
@@ -247,6 +246,8 @@ static int decode_and_wait_for_frame(AVCodecContext * const avctx,AVPacket *pack
 	  //frame->pts=now;
 	  //frame->pts=beforeUs;
 	  // display frame
+	  auto reported_delay_us=getTimeUs()-frame->pts;
+	  std::cout<<"Reported decode:"<<((float)reported_delay_us/1000.0f)<<"ms\n";
 	  write_texture(da_out,egl_display,frame);
 	}else{
 	  //std::cout<<"avcodec_receive_frame returned:"<<ret<<"\n";

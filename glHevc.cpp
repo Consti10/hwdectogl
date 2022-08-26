@@ -207,6 +207,53 @@ static int decode_write(egl_aux_t *da_out, EGLDisplay *egl_display, AVCodecConte
 	return ret2;
   }
 }
+//Sends one frame to the decoder, then waits for the output frame to become available
+static int decode_and_wait_for_frame(AVCodecContext * const avctx,AVPacket *packet,egl_aux_t *da_out, EGLDisplay *egl_display){
+  AVFrame *frame = nullptr;
+  // testing
+  //check_single_nalu(packet->data,packet->size);
+  //std::cout<<"Decode packet:"<<packet->pos<<" size:"<<packet->size<<" B\n";
+  const auto before=std::chrono::steady_clock::now();
+  int ret = avcodec_send_packet(avctx, packet);
+  if (ret < 0) {
+	fprintf(stderr, "Error during decoding\n");
+	return ret;
+  }
+  // alloc output frame(s)
+  if (!(frame = av_frame_alloc())) {
+	fprintf(stderr, "Can not alloc frame\n");
+	ret = AVERROR(ENOMEM);
+	av_frame_free(&frame);
+	return ret;
+  }
+  // Poll until we get the frame out
+  bool gotFrame=false;
+  while (!gotFrame){
+	ret = avcodec_receive_frame(avctx, frame);
+	if(ret == AVERROR_EOF){
+	  std::cout<<"Got EOF\n";
+	  break;
+	}else if(ret==0){
+	  // we got a new frame
+	  const auto x_delay=std::chrono::steady_clock::now()-before;
+	  std::cout<<"(True) decode delay:"<<((float)std::chrono::duration_cast<std::chrono::microseconds>(x_delay).count()/1000.0f)<<" ms\n";
+	  //avgDecodeTime.add(x_delay);
+	  //avgDecodeTime.printInIntervals(CALCULATOR_LOG_INTERVAL);
+	  gotFrame=true;
+	  //const auto now=getTimeUs();
+	  //MLOGD<<"Frame pts:"<<frame->pts<<" Set to:"<<now<<"\n";
+	  //frame->pts=now;
+	  //frame->pts=beforeUs;
+	  // display frame
+	  //x_push_into_filter_graph(dpo,frame);
+	  write_texture(da_out,egl_display,frame);
+	}else{
+	  //std::cout<<"avcodec_receive_frame returned:"<<ret<<"\n";
+	}
+  }
+  av_frame_free(&frame);
+  return 0;
+}
 
 
 

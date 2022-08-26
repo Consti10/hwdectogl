@@ -353,7 +353,7 @@ GLint common_get_shader_program(const char *vertex_shader_source, const char *fr
 int main(int argc, char *argv[]) {
 
   auto options= parse_run_parameters(argc,argv);
-  std::cout<<"Disable VSYNC:"<<(options.disable_vsync?"Y":"N");
+  std::cout<<"Disable VSYNC:"<<(options.disable_vsync?"Y":"N")<<"\n";
 
   GLuint shader_program, vbo;
   GLint pos;
@@ -366,9 +366,9 @@ int main(int argc, char *argv[]) {
   glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 2);
   glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 0);
   glfwWindowHint(GLFW_RESIZABLE, GL_FALSE);
-  //if(options.disable_vsync){
-	//glfwWindowHint( GLFW_DOUBLEBUFFER,GL_FALSE );
-  //}
+  if(options.disable_vsync){
+	glfwWindowHint( GLFW_DOUBLEBUFFER,GL_FALSE );
+  }
   if(options.disable_vsync){
 	window = glfwCreateWindow(options.width, options.height, __FILE__, glfwGetPrimaryMonitor(), NULL);
   }else{

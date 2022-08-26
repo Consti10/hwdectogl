@@ -160,6 +160,7 @@ static int write_texture(egl_aux_t *da_out,EGLDisplay *egl_display,AVFrame *fram
 
 	eglDestroyImageKHR(*egl_display, image);
   }
+  return 0;
 }
 
 // This function is in the main loop.

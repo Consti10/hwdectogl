@@ -245,7 +245,6 @@ static int decode_and_wait_for_frame(AVCodecContext * const avctx,AVPacket *pack
 	  //frame->pts=now;
 	  //frame->pts=beforeUs;
 	  // display frame
-	  //x_push_into_filter_graph(dpo,frame);
 	  write_texture(da_out,egl_display,frame);
 	}else{
 	  std::cout<<"avcodec_receive_frame returned:"<<ret<<"\n";
@@ -494,9 +493,10 @@ int main(int argc, char *argv[]) {
 
 	  if(da->fd > -1 && da->texture >= 0) {
 		const auto delta=std::chrono::steady_clock::now()-before;
-		std::cout<<"Decode_write took:"<<std::chrono::duration_cast<std::chrono::milliseconds>(delta).count()<<"ms\n";
+		//std::cout<<"Decode_write took:"<<std::chrono::duration_cast<std::chrono::milliseconds>(delta).count()<<"ms\n";
 
 		///printf("Fd: %d	Texture: %d\n", da->fd, da->texture);
+		const auto beforeRendering=std::chrono::steady_clock::now();
 
 		///glBindTexture(GL_TEXTURE_EXTERNAL_OES, da->texture);
 		///glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);  //"u_blitter:600: Caught recursion. This is a driver bug."
@@ -505,6 +505,8 @@ int main(int argc, char *argv[]) {
 		glUseProgram(shader_program);
 		glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
 		glfwSwapBuffers(window);
+		const auto deltaRender=std::chrono::steady_clock::now()-beforeRendering;
+		std::cout<<"Render took:"<<((float)std::chrono::duration_cast<std::chrono::microseconds>(deltaRender).count()/1000.0f)<<" ms\n";
 
 		/// flush
 		glDeleteTextures(1, &da->texture);

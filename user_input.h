@@ -8,11 +8,12 @@
 #include <getopt.h>
 #include <iostream>
 
-static const char optstr[] = "?w:h:i";
+static const char optstr[] = "?w:h:iv";
 static const struct option long_options[] = {
 	{"width", required_argument, nullptr, 'w'},
 	{"height", required_argument, nullptr, 'h'},
 	{"input", required_argument, nullptr, 'i'},
+	{"disable-vsync", no_argument, nullptr, 'v'},
 	{nullptr, 0, nullptr, 0},
 };
 
@@ -21,6 +22,7 @@ struct UserOptions {
   int width=1280;
   int height=720;
   std::string filename;
+  bool disable_vsync=false;
 };
 
 static UserOptions parse_run_parameters(int argc, char *argv[]){
@@ -34,6 +36,8 @@ static UserOptions parse_run_parameters(int argc, char *argv[]){
 	  case 'h':ret.height=std::atoi(tmp_optarg);
 		break;
 	  case 'i':ret.filename=std::string(tmp_optarg);
+		break;
+	  case 'v':ret.disable_vsync= true;
 		break;
 	  case '?':
 	  default:

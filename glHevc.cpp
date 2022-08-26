@@ -363,6 +363,10 @@ int main(int argc, char *argv[]) {
   glfwWindowHint(GLFW_RESIZABLE, GL_FALSE);
   window = glfwCreateWindow(options.width, options.height, __FILE__, NULL, NULL);
   glfwMakeContextCurrent(window);
+  if(options.disable_vsync){
+	std::cout<<"Disabling VSYNC\n";
+	glfwSwapInterval( 0 );
+  }
 
   //EGLDisplay egl_display = glfwGetEGLDisplay();
   EGLDisplay egl_display = eglGetCurrentDisplay();

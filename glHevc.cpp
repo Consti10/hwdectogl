@@ -254,7 +254,7 @@ static int decode_and_wait_for_frame(AVCodecContext * const avctx,AVPacket *pack
 	if(std::chrono::steady_clock::now()-beginReceiveFrame>std::chrono::seconds(5)){
 	  std::cout<<"No frame after 5 seconds\n";
 	  av_frame_free(&frame);
-	  return -1;
+	  return 0; /// goes sends/gets another packet.
 	}
   }
   av_frame_free(&frame);

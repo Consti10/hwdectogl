@@ -504,6 +504,8 @@ int main(int argc, char *argv[]) {
   da->fd=-1;
   da->texture=0;
 
+  uint64_t lastFrameUs=0;
+
   while (ret>=0 && !glfwWindowShouldClose(window)) {
 
 	glfwPollEvents();  /// for mouse window closing
@@ -559,6 +561,13 @@ int main(int argc, char *argv[]) {
 		glDeleteTextures(1, &da->texture);
 		da->texture = 0;
 		da->fd = -1;
+		if(lastFrameUs==0){
+		  lastFrameUs=getTimeUs();
+		}else{
+		  const auto deltaUs=getTimeUs()-lastUs;
+		  std::cout<<"Frame time:"<<(deltaUs/1000.0)<<"ms\n";
+		  lastFrameUs=getTimeUs();
+		}
 	  }
 
 	  //usleep(3000); // hacky backy

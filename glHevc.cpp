@@ -564,7 +564,7 @@ int main(int argc, char *argv[]) {
 		if(lastFrameUs==0){
 		  lastFrameUs=getTimeUs();
 		}else{
-		  const auto deltaUs=getTimeUs()-lastUs;
+		  const auto deltaUs=getTimeUs()-lastFrameUs;
 		  std::cout<<"Frame time:"<<(deltaUs/1000.0)<<"ms\n";
 		  lastFrameUs=getTimeUs();
 		}
